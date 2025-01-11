@@ -11,7 +11,16 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<Partial<IshopList> | null>(null);
   const [datas, setDatas] = useState<Partial<IshopList>>({product: "", unit: "", random: 0});
+  const [inputMode, setInputMode] = useState(false);
 
+  const editModeOn = (item: IshopList) => {
+    setEditData(item);
+    setInputMode(true);
+  }
+  const editModeOff = () => {
+    setEditData(null);
+    setInputMode(false);
+  }
   useEffect(() => {
     fetchData();
   }, []);
@@ -115,91 +124,105 @@ function App() {
 
 
 
-
+if(!inputMode){
   return (
   <>
-  { datas && (
-    <div>
-      <h1>Add new list element:</h1>
-      <form  onSubmit={(e) =>{
-        e.preventDefault();
-        const newItem: Partial<IshopList> = {product: datas.product, unit: datas.unit, random: datas.random};
-        
-        addData(newItem);
-      }}>
+      { datas && (
+        <div>
+          <h1>Add new list element:</h1>
+          <form  onSubmit={(e) =>{
+            e.preventDefault();
+            const newItem: Partial<IshopList> = {product: datas.product, unit: datas.unit, random: datas.random};
+            
+            addData(newItem);
+          }}>
 
 
-        <label>
-          Product: 
-          <input 
-          type='text' 
-          
-          onChange={(e) =>{
-            setDatas((prevData) => ({
-              ...prevData,
-              product: e.target.value,
-            }))
-          }}
-          ></input>
-        </label>
-        
-        <br />
+            <label>
+              Product: 
+              <input 
+              type='text' 
+              value={""}
+              onChange={(e) =>{
+                setDatas((prevData) => ({
+                  ...prevData,
+                  product: e.target.value,
+                }))
+              }}
+              ></input>
+            </label>
+            
+            <br />
 
-        <label>
-        Unit:
-          <input  
-          type="text"
-          onChange={(e) =>{
-            setDatas((prevData) => ({
-              ...prevData,
-              unit: e.target.value,
-            }))
-          }}
-          >
+            <label>
+            Unit:
+              <input  
+              type="text"
+              value={""}
+              onChange={(e) =>{
+                setDatas((prevData) => ({
+                  ...prevData,
+                  unit: e.target.value,
+                }))
+              }}
+              >
 
-          </input>
-        </label>
+              </input>
+            </label>
 
-        <br />
+            <br />
 
-        <label>
-        Random number:
-          <input  
-          type="number"
-          onChange={(e) =>{
-            setDatas((prevData) => ({
-              ...prevData,
-              random: parseInt( e.target.value),
-            }))
-          }}
-          >
-          </input>
-        </label>
-        <br />
-        <button type="submit">Save</button>
-      </form>
-    </div>
-  )}
-  <br />
-  <table>
-      {data.map((item) => (
-      <tr key={item.id}>
-        <td>{item.product}</td>
-        <td>{item.unit}</td>
-        <td>{item.random}</td>
-   
-        <td><button onClick={() => setEditData(item)}>Edit</button></td>
-        <td><button onClick={() => deleteData(item.id)}>Delete</button></td>
-      </tr>
-      ))}
-  </table>
+            <label>
+            Random number:
+              <input  
+              type="number"
+              value={""}
+              onChange={(e) =>{
+                setDatas((prevData) => ({
+                  ...prevData,
+                  random: parseInt( e.target.value),
+                }))
+              }}
+              >
+              </input>
+            </label>
+            <br />
+            <button type="submit">Save</button>
+          </form>
+        </div>
+      )}
+     
+    
+    
 
-      {editData && (
+     <div>
+      <br />
+      <table>
+          {data.map((item) => (
+          <tr key={item.id}>
+            <td>{item.product}</td>
+            <td>{item.unit}</td>
+            <td>{item.random}</td>
+      
+            <td><button onClick={() => editModeOn(item)}>Edit</button></td>
+            <td><button onClick={() => deleteData(item.id)}>Delete</button></td>
+          </tr>
+          ))}
+      </table>
+      </div>
+    </>
+  );
+  }
+  else{
+    return (
+      <>
+        {editData && (
         <div>
           <h2>Data editing</h2>
           <form onSubmit={(event) => {
             event.preventDefault();
             if(editData.id){
+              setInputMode(false);
               updateData(editData.id, {product: editData.product, unit: editData.unit, random: editData.random });
             }
           }}>
@@ -256,17 +279,40 @@ function App() {
               </input>
             </label>
             <br />
-            <button type="submit">Save</button>
-            <button type="button" onClick={() => setEditData(null)}>Undo</button>
+            <button type="submit" >Save</button>
+            <button type="button" onClick={() => editModeOff()}>Undo</button>
 
 
           </form>
         </div>
-      )}
-  </>
+        )}
+        
+        
+         <div>
+        <br />
+        <table>
+            {data.map((item) => (
+            <tr key={item.id}>
+              <td>{item.product}</td>
+              <td>{item.unit}</td>
+              <td>{item.random}</td>
+        
+              <td><button onClick={() => setEditData(item)} >Edit</button></td>
+              <td><button onClick={() => deleteData(item.id)}>Delete</button></td>
+            </tr>
+            ))}
+      </table>
+      </div>
+      </>
+      
+    )
+  }
+
+
+      
+ 
 
  
-  );
 }
 
 export default App
