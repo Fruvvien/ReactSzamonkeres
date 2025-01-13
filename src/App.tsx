@@ -65,6 +65,7 @@ function App() {
     }
   }
   const deleteData = async (id: number) => {
+    setInputMode(false);
     try {
     const response = await
     fetch(`https://retoolapi.dev/5kIrTo/data/${id}`, {
