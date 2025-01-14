@@ -143,7 +143,7 @@ if(!inputMode){
               Product: 
               <input 
               type='text' 
-              value={""}
+              value={datas.product|| ""}
               onChange={(e) =>{
                 setDatas((prevData) => ({
                   ...prevData,
@@ -159,7 +159,7 @@ if(!inputMode){
             Unit:
               <input  
               type="text"
-              value={""}
+              value={datas.unit|| ""}
               onChange={(e) =>{
                 setDatas((prevData) => ({
                   ...prevData,
@@ -177,7 +177,7 @@ if(!inputMode){
             Random number:
               <input  
               type="number"
-              value={""}
+              value={datas.random|| ""}
               onChange={(e) =>{
                 setDatas((prevData) => ({
                   ...prevData,
